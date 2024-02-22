@@ -1,18 +1,18 @@
-#CSCI 4140 Assignment 1
+# CSCI 4140 Assignment 1
 <br>
 
-###Link to work
+### Link to work
 https://csci4140ass1.onrender.com/index.php
 <br>
 
-###Files
+### Files
 index.php
 style.css
 dockerfile
 
 <br>
 
-###Description
+### Description
 Functionalities
 - User Authentication using cookies
 - User image privacy based on login status
@@ -20,7 +20,7 @@ Functionalities
 
 <br>
 
-###DB Schema
+### DB Schema
 photoId (uuid)
 username (string)
 photo (binary data)
@@ -28,6 +28,6 @@ public (boolean)
 
 <br>
 
-###Limitations
+### Limitations
 The image preview and editor could not be made to work. I couldnt make imagick work on my Mac. Due to procrastination, I fell short on time, and I bear full responsibility for it.
 
