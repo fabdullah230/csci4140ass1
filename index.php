@@ -118,7 +118,7 @@ if (isset($_GET['action']) && $_GET['action'] === 'logout') {
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Simple PHP Login with Image Gallery</title>
+    <title>CSCI 4140 Assignment 1</title>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
