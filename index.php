@@ -10,6 +10,23 @@ $dbPass = 'GRDSrTt7ygmxJdlx0ogjYYvBvu0lnvKq';
 try {
     $pdo = new PDO("pgsql:host=$dbHost;port=$dbPort;dbname=$dbName", $dbUser, $dbPass);
     $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+
+
+    try {
+    $tableCheckStmt = $pdo->query("SELECT to_regclass('public.images')");
+    if($tableCheckStmt->fetchColumn() === null) {
+        $pdo->exec("CREATE TABLE images (
+            id SERIAL PRIMARY KEY,
+            photo BYTEA NOT NULL,
+            username VARCHAR(255) NOT NULL,
+            public BOOLEAN NOT NULL DEFAULT FALSE
+        )");
+    }
+    } catch (PDOException $e) {
+        die("Could not check or create the table 'images': " . $e->getMessage());
+    }
+
+    
 } catch (PDOException $e) {
     die("Could not connect to the database $dbName :" . $e->getMessage());
 }
