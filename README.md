@@ -21,9 +21,9 @@ Functionalities
 <br>
 
 ### DB Schema
-photoId (uuid)
-username (string)
-photo (binary data)
+photoId (uuid)    
+username (string)    
+photo (binary data)    
 public (boolean)
 
 <br>
