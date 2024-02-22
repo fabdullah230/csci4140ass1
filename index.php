@@ -31,53 +31,25 @@ try {
     die("Could not connect to the database $dbName :" . $e->getMessage());
 }
 
-function applyFilter($imagePath, $filter) {
-    $imagick = new \Imagick($imagePath);
-    switch ($filter) {
-        case 'border':
-            $imagick->borderImage('black', 5, 5);
-            break;
-        case 'bw':
-            $imagick->transformImageColorspace(\Imagick::COLORSPACE_GRAY);
-            break;
-    }
-    $imagick->writeImage($imagePath);
-    return $imagick->getImageBlob();
-}
-
 $isLoggedIn = isset($_SESSION['username']); 
 $username = $isLoggedIn ? $_SESSION['username'] : '';
 
-$tempImagePath = null;
 if ($isLoggedIn && $_SERVER['REQUEST_METHOD'] === 'POST' && isset($_FILES['photo'])) {
     $file = $_FILES['photo'];
     if ($file['error'] === UPLOAD_ERR_OK && in_array($file['type'], ['image/jpeg', 'image/png'])) {
-        $tempImagePath = 'temp/' . $file['name'];
-        move_uploaded_file($file['tmp_name'], $tempImagePath);
+        $photoData = file_get_contents($file['tmp_name']);
+        $public = isset($_POST['public']) ? (bool)$_POST['public'] : false;
         
-        if (isset($_POST['process'])) {
-            $filter = $_POST['filter'];
-            $photoData = applyFilter($tempImagePath, $filter);
-            file_put_contents($tempImagePath, $photoData);
+        try {
+            $stmt = $pdo->prepare("INSERT INTO images (photo, username, public) VALUES (:photo, :username, :public)");
+            $stmt->bindParam(':photo', $photoData, PDO::PARAM_LOB);
+            $stmt->bindParam(':username', $username, PDO::PARAM_STR);
+            $stmt->bindParam(':public', $public, PDO::PARAM_BOOL);
+            $stmt->execute();
+        } catch (PDOException $e) {
+            echo "Error: " . $e->getMessage();
         }
     }
-}
-
-if ($isLoggedIn && isset($_POST['upload']) && file_exists($tempImagePath)) {
-    $photoData = file_get_contents($tempImagePath);
-    $public = isset($_POST['public']) ? (bool)$_POST['public'] : false;
-
-    try {
-        $stmt = $pdo->prepare("INSERT INTO images (photo, username, public) VALUES (:photo, :username, :public)");
-        $stmt->bindParam(':photo', $photoData, PDO::PARAM_LOB);
-        $stmt->bindParam(':username', $username, PDO::PARAM_STR);
-        $stmt->bindParam(':public', $public, PDO::PARAM_BOOL);
-        $stmt->execute();
-    } catch (PDOException $e) {
-        echo "Error: " . $e->getMessage();
-    }
-    
-    unlink($tempImagePath);
 }
 
 $perPage = 8;
