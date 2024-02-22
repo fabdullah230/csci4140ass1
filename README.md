@@ -6,9 +6,9 @@ https://csci4140ass1.onrender.com/index.php
 <br>
 
 ### Files
-index.php
-style.css
-dockerfile
+- index.php    
+- style.css    
+- dockerfile    
 
 <br>
 
