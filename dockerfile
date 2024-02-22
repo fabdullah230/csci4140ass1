@@ -1,9 +1,12 @@
 # Use the official PHP image with Apache
 FROM php:8.1-apache
 
-# Install system dependencies for PostgreSQL PDO
+# Install system dependencies for PostgreSQL PDO and ImageMagick
 RUN apt-get update && apt-get install -y \
     libpq-dev \
+    libmagickwand-dev --no-install-recommends \
+    && pecl install imagick \
+    && docker-php-ext-enable imagick \
     && docker-php-ext-install pdo pdo_pgsql
 
 # Enable Apache mod_rewrite
